@@ -16,6 +16,7 @@ Codepointers:
 - JumpIfButtons (Buttons, State): Jumps to [State] if buttons provided are all pressed (Only checks buttons from player provided in sprite)
 - JumpIfHitWall (Direction, State): Jumps to [State] if hitting wall in [Direction]
 - JumpIfFlag    (Flag, State): Jumps to [State] if flag is set
+- JumpIfTarget  (State): Jumps to [State] if target exists
 - Fire          (Projectile Type, Direction): Creates a projectile facing [Direction] (Uses radians)
 - ForceTarget   (Distance, Direction): Sets the position of the target to a certain [Distance] and [Direction] away
 - Explode       (Damage, Distance): Deal [Damage] to sprites in [Distance]
@@ -58,6 +59,7 @@ let currentActors = [] // [100,0,0]
  */
 //% weight=100 color=#f2c11d icon="⚙"
 namespace ITDIMA {
+
     /**
      * Load State code (I recommend using it at the beginning)
      * @param code describe parameter here, eg: '''PlayRWalk:5:0:0;'''
@@ -98,14 +100,14 @@ namespace ITDIMA {
     //% block
     export function DoState(sprite: Sprite, pointer: number) {
         if (currentStates == null) { game.splash("ITDIMA", "States aren't loaded :(")
-        } else if (sprite.StateDelay > 0) {sprite.StateDelay--; return}
+        } else if (sprites.readDataNumber(sprite, "StateDelay") > 0) {sprites.changeDataNumberBy(sprite, "StateDelay", -1); return}
 
         let argus: any[] = []
         let point: number = pointer
         for (let count = 255; count>0; count--) {
             argus = GetLine(currentStates,point).split(':')
             sprite.setImage(assets.image(argus[0]))
-            sprite.StateDelay = argus[1]
+            sprites.setDataNumber(sprite, "StateDelay", argus[1])
             point = argus[2]
             if (argus[1] > 0) {break}
         }

@@ -9,3 +9,8 @@ ITDIMA.LoadStates(states)
 
 scene.setBackgroundColor(1)
 let mySprite = sprites.create(assets.image`hero1`,0)
+ITDIMA.InitSprite(mySprite)
+
+game.onUpdate(function () {
+    ITDIMA.DoState(mySprite, sprites.readDataNumber(mySprite, "StatePointer"))
+})
